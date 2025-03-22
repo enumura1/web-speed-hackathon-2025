@@ -64,7 +64,6 @@ const config = {
           format: {
             comments: false,
           },
-          mangle: true,
         },
       }),
     ],
