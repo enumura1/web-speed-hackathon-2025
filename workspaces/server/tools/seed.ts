@@ -91,7 +91,6 @@ async function main() {
   const rootDir = path.resolve(__dirname, '../../..');
   const files = await getFiles(path.resolve(rootDir, 'public/images'));
   const imagePaths = files.map((file) => path.join('/', path.relative(rootDir, file)));
-  console.log('Available image paths:', imagePaths);
 
   try {
     const animeList = await fetchAnimeList();
@@ -118,7 +117,7 @@ async function main() {
     {
       const data: (typeof schema.channel.$inferInsert)[] = CHANNEL_NAME_LIST.map(({ id, name }) => ({
         id: faker.string.uuid(),
-        logoUrl: `/public/logos/${id}.webp`,
+        logoUrl: `/public/logos/${id}.svg`,
         name,
       }));
       const result = await database.insert(schema.channel).values(data).returning();
