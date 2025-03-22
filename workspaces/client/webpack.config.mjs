@@ -32,7 +32,7 @@ const config = {
         },
       },
       {
-        test: /\.png$/,
+        test: /\.(png|webp)$/,
         type: 'asset/inline',
       },
       {
