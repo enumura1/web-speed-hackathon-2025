@@ -218,6 +218,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
                 orderBy(episode, { asc }) {
                   return asc(episode.order);
                 },
+                limit: 10,
               },
             },
           },
@@ -339,6 +340,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
         orderBy(program, { asc }) {
           return asc(program.startAt);
         },
+        limit: 10,
         where(program, { between, sql }) {
           // 競技のため、時刻のみで比較する
           return between(
@@ -375,6 +377,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
         orderBy(program, { asc }) {
           return asc(program.startAt);
         },
+        limit: 10,
         where(program, { inArray }) {
           if (req.query.programIds != null) {
             const programIds = req.query.programIds.split(',');
@@ -392,6 +395,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
                     orderBy(episode, { asc }) {
                       return asc(episode.order);
                     },
+                    limit: 10,
                   },
                 },
               },
@@ -436,6 +440,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
                     orderBy(episode, { asc }) {
                       return asc(episode.order);
                     },
+                    limit: 10,
                   },
                 },
               },
@@ -476,11 +481,13 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
         where(module, { eq }) {
           return eq(module.referenceId, req.params.referenceId);
         },
+        limit: 5,
         with: {
           items: {
             orderBy(item, { asc }) {
               return asc(item.order);
             },
+            limit: 10,
             with: {
               series: {
                 with: {
@@ -488,6 +495,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
                     orderBy(episode, { asc }) {
                       return asc(episode.order);
                     },
+                    limit: 10,
                   },
                 },
               },
@@ -499,6 +507,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
                         orderBy(episode, { asc }) {
                           return asc(episode.order);
                         },
+                        limit: 10,
                       },
                     },
                   },
@@ -508,6 +517,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
           },
         },
       });
+      reply.header('cache-control', 'public, max-age=300');
       reply.code(200).send(modules);
     },
   });
