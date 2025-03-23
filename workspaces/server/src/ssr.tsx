@@ -36,32 +36,34 @@ export function registerSsr(app: FastifyInstance): void {
     if (context instanceof Response) {
       return reply.send(context);
     }
-
     const router = createStaticRouter(handler.dataRoutes, context);
-    renderToString(
+
+    const renderedHtml = renderToString(
       <StrictMode>
         <StoreProvider createStore={() => store}>
           <StaticRouterProvider context={context} hydrate={false} router={router} />
         </StoreProvider>
-      </StrictMode>,
+      </StrictMode>
     );
-
+    
     reply.type('text/html').send(/* html */ `
       <!DOCTYPE html>
-      <html lang="ja">
+      <html lang="ja" style="background: #000; color: #fff;">
         <head>
           <meta charSet="UTF-8" />
           <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-          <script src="/public/main.js" defer></script>
+          <script src="/public/main.js" type="module"></script>
         </head>
-        <body></body>
+        <body style="background: #000; color: #fff; margin: 0; padding: 0;">
+          <div id="app-root" style="min-height: 100dvh; width: 100dvw;">${renderedHtml}</div>
+          <script>
+            window.__staticRouterHydrationData = ${htmlescape({
+              actionData: context.actionData,
+              loaderData: context.loaderData,
+            })};
+          </script>
+        </body>
       </html>
-      <script>
-        window.__staticRouterHydrationData = ${htmlescape({
-          actionData: context.actionData,
-          loaderData: context.loaderData,
-        })};
-      </script>
     `);
   });
 }
